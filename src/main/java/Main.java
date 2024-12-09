@@ -4,9 +4,10 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        Race race = new Race();
 
         // Заполнение массива машин - участников
-        for (int i = 0; i < Race.cars.length; i++) {
+        for (int i = 0; i < race.cars.length; i++) {
             String name = "";
             int speed = -1;
 
@@ -16,18 +17,24 @@ public class Main {
             }
 
             while (speed <= 0 || speed > 250) {
-                System.out.printf("Введите скорость машины '%s' В диапазоне от 1 до 250", name);
-                speed = scanner.nextInt();
-                if (speed <= 0 || speed > 250) {
-                    System.out.println("Ошибка. Некорректное значение скорости");
+                System.out.printf("Введите скорость машины '%s' В диапазоне от 1 до 250 \n", name);
+
+                // Проверка введенной скорости на тип данных и диапазон
+                try {
+                    speed = Integer.parseInt(scanner.next());
+                    if (speed <= 0 || speed > 250) {
+                        System.out.println("Ошибка. Введенная скорость вне диапазона 1 - 250");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Введенное значение должно быть типа Integer. Ошибка: " + e.getMessage());
                 }
             }
 
-            Race.cars[i] = new Car (name, speed);
+            race.cars[i] = new Car (name, speed);
         }
 
-        Car leader = Race.getLeader();
-        ArrayList<Car> contenders = Race.getDrawList(leader);   //Список машин, финишировавших одновременно с лидером
+        Car leader = race.getLeader();
+        ArrayList<Car> contenders = race.getDrawList(leader);   //Список машин, финишировавших одновременно с лидером
 
         if (contenders.size() > 1) {
             System.out.println("Первое место делят машины: ");
